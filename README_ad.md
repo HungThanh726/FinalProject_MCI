@@ -1,4 +1,4 @@
-# 📊 SQL Business Analytics Portfolio
+# 📊 SQL Business Analytics Library
 
 ![SQL Server](https://img.shields.io/badge/SQL%20Server-T--SQL-CC2927?style=flat&logo=microsoftsqlserver)
 ![Power BI](https://img.shields.io/badge/Power%20BI-Dashboard-F2C811?style=flat&logo=powerbi)
