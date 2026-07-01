@@ -3,7 +3,7 @@
 ![SQL Server](https://img.shields.io/badge/SQL%20Server-T--SQL-CC2927?style=flat&logo=microsoftsqlserver)
 ![Power BI](https://img.shields.io/badge/Power%20BI-Dashboard-F2C811?style=flat&logo=powerbi)
 
-Bài tập thiết kế cơ sở dữ liệu quản lý **cho thuê sách thư viện trường học**. Vì không có dataset gốc, toàn bộ dữ liệu (40 người dùng, 30 đầu sách, 289 lượt mượn trong 4 tháng) được **tự sinh** để mô phỏng hoạt động thực tế của thư viện, đủ điều kiện kiểm thử các yêu cầu phân tích đặt ra.
+Bài tập thiết kế cơ sở dữ liệu quản lý **cho thuê sách thư viện trường học**. Vì Project cuối khoá không có dataset, toàn bộ dữ liệu (40 người dùng, 30 đầu sách, 289 lượt mượn trong 4 tháng) được **tự sinh** để mô phỏng hoạt động thực tế của thư viện, đủ điều kiện kiểm thử các yêu cầu phân tích đặt ra.
 
 ---
 
