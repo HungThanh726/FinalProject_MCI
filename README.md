@@ -1,182 +1,111 @@
-# 📚 Library Borrow Management — T-SQL Database Design & Analytics
+# 📚 Library Analytics Project
 
-![SQL Server](https://img.shields.io/badge/SQL%20Server-T--SQL-CC2927?style=flat&logo=microsoftsqlserver)
-![Power BI](https://img.shields.io/badge/Power%20BI-Dashboard-F2C811?style=flat&logo=powerbi)
-
-Bài tập thiết kế cơ sở dữ liệu quản lý **cho thuê sách thư viện trường học**. Vì Project cuối khoá không có dataset, toàn bộ dữ liệu (40 người dùng, 30 đầu sách, 289 lượt mượn trong 4 tháng) được **tự sinh** để mô phỏng hoạt động thực tế của thư viện, đủ điều kiện kiểm thử các yêu cầu phân tích đặt ra.
+Dự án phân tích hoạt động vận hành **thư viện trường học** dựa trên dữ liệu thực tế — doanh thu cho thuê sách, bán sách, biến động tồn kho kệ sách, và hành vi mượn sách của sinh viên.
 
 ---
 
 ## 🗂️ Cấu trúc Repository
 
 ```
-library-borrow-management/
-├── README.md                    ← File này
-├── Library_Master_TSQL.sql      ← Toàn bộ schema + data + 6 câu hỏi
-├── PowerBI_Guide_Library.md     ← Hướng dẫn dựng dashboard Power BI
-├── Library_ERD.png              ← Sơ đồ ERD (ảnh tĩnh, dùng cho Word/PPT)
-└── Library_ERD.svg              ← Sơ đồ ERD (vector, chất lượng cao)
+library-analytics/
+- README.md
+- Library_Master_TSQL.sql      ← Toàn bộ query — 8 BQ, annotated
+- Library_PowerBI_Guide.md     ← Hướng dẫn dựng dashboard
+- Library_ERD.png              ← Sơ đồ quan hệ bảng (ảnh tĩnh)
 ```
 
 ---
 
-## 🎯 6 Câu hỏi bài tập & cách giải quyết
+## 🧰 Tech Stack
 
-| # | Yêu cầu | Vị trí trong file SQL | Kỹ thuật |
-|---|---------|------------------------|----------|
-| 1 | Tự tạo dữ liệu, tạo PK/FK | PHẦN 0–2 | `CREATE TABLE`, `INSERT`, ràng buộc khóa |
-| 2 | Xác định PK/FK, lý do cần các bảng, quy trình nhập liệu | PHẦN 1 (comment) | Thiết kế CSDL quan hệ |
-| 3 | View thống kê thuê sách theo ngành học/tháng + Top 2 | PHẦN 3 | `CREATE VIEW`, `ROW_NUMBER() OVER (PARTITION BY ...)` |
-| 4 | SubQuery — sách có >5 người mượn/tháng | PHẦN 4 | Subquery trong `FROM` |
-| 5 | CTE — sách có >5 người mượn/tháng (lặp lại câu 4) | PHẦN 5 | `WITH ... AS (...)` |
-| 6 | CTE — người dùng mượn >10 lần | PHẦN 6 | `WITH ... AS (...)` + `JOIN` |
+| Layer | Công cụ |
+|-------|---------|
+| Database Engine | SQL Server 2019+ (T-SQL) |
+| Query IDE | SSMS (SQL Server Management Studio) |
+| BI / Visualization | Power BI Desktop |
+| Version Control | Git / GitHub |
 
 ---
 
-## 🧱 Câu 1 & 2 — Thiết kế bảng
+## 🗄️ Schema & Quan hệ bảng
 
-### Sơ đồ quan hệ ERD (khóa chính / khóa ngoại)
+Có hình ảnh ở ngoài
 
-![Library ERD](./Library_ERD.png)
+### Mô tả từng bảng
 
-> File ảnh tĩnh: `Library_ERD.png` / `Library_ERD.svg` — dùng để chèn vào Word, PowerPoint, hoặc báo cáo (không phụ thuộc engine render của GitHub).
-> Bản Mermaid bên dưới cũng tự render trực tiếp khi xem README trên GitHub web.
+| Bảng | Rows | Mô tả |
+|------|------|-------|
+| `Student` | 1,017 | Sinh viên — thẻ thư viện STC01→STC1017 |
+| `Teacher` | 99 | Giảng viên — thẻ TC01→TC99 |
+| `Category` | 12 | 12 thể loại sách (Business, IT, Science...) |
+| `Shelves` | 21 | 21 kệ sách, mỗi kệ thuộc 1 Category |
+| `Products` | 50 | 50 đầu sách — có UnitCost, UnitPrice, UnitRental |
+| `Rental_Transaction` | 999 | Lịch sử cho thuê (2017–2026) |
+| `Sale_Transaction` | 999 | Lịch sử bán sách — ngày lưu dạng Excel serial |
+| `SerInv_Transaction` | 999 | Biến động tồn kho cuối ngày — ngày Excel serial |
+| `Classes` | 48 | Lớp học — liên kết với Student qua `Class` |
+| `RoleId` | 5 | Cấp độ vai trò người dùng |
+| `Service` | 3 | Loại dịch vụ (Cho thuê, Bán, Lưu trữ) |
 
-```mermaid
-erDiagram
-  ROLES ||--o{ USERS : "phan loai"
-  MAJOR ||--o{ PRODUCTS : "thuoc nganh"
-  BOOK_CATEGORY ||--o{ PRODUCTS : "thuoc the loai"
-  PRODUCTS ||--|| BOOK_STOCK : "ton kho"
-  USERS ||--o{ BORROW_TRANSACTION : "muon sach"
-  PRODUCTS ||--o{ BORROW_TRANSACTION : "duoc muon"
-
-  ROLES {
-    int Position_id PK
-    string Position_name
-    string Role
-    int Semester_limited
-  }
-  MAJOR {
-    int Major_ID PK
-    string Major_Name
-  }
-  BOOK_CATEGORY {
-    int Category_ID PK
-    string Category_Name
-  }
-  USERS {
-    int Users_id PK
-    string Full_name
-    string Gender
-    string Email
-    string Phone_number
-    int Position_id FK
-    int Remaining_limited
-  }
-  PRODUCTS {
-    int Product_ID PK
-    string Product_Name
-    string Author
-    int Unit_Price
-    int Category_ID FK
-    int Major_ID FK
-  }
-  BOOK_STOCK {
-    int Product_ID PK_FK
-    int Inventory_Number
-  }
-  BORROW_TRANSACTION {
-    int Order_ID PK
-    int Users_id FK
-    int Product_ID FK
-    date Start_date
-    date End_date
-    int Quantity
-  }
-```
-
-### Sơ đồ tóm tắt (dạng text, đọc nhanh)
-
-```
-Roles ──────< Users >──────── Borrow_Transaction >──── Products >──── Major
-                                                            │
-                                                       Book_Category
-                                                            │
-                                                       Book_Stock
-```
-
-### Danh sách bảng & lý do tồn tại
-
-| Bảng | Vai trò | Tại sao cần |
-|------|---------|-------------|
-| **Roles** | Vai trò người mượn (SV/GV/Nhân viên) | Mỗi nhóm có giới hạn mượn (`Semester_limited`) khác nhau — tách riêng để dễ đổi chính sách mà không sửa bảng Users |
-| **Major** | Ngành học | Phục vụ trực tiếp yêu cầu "thống kê theo phân ngành trường học" |
-| **Book_Category** | Thể loại sách | Phân loại độc lập với ngành học — 1 ngành có thể có nhiều thể loại sách khác nhau |
-| **Users** | Người mượn sách | Bảng chiều (dimension) lưu thông tin định danh |
-| **Products** | Đầu sách | Bảng chiều trung tâm, liên kết Ngành học + Thể loại |
-| **Book_Stock** | Tồn kho | Tách riêng khỏi Products vì tồn kho thay đổi liên tục (mỗi lượt mượn/trả), tránh "khóa" cả bảng mô tả sách |
-| **Borrow_Transaction** | Giao dịch mượn sách | Bảng giao dịch (fact table) — trung tâm cho mọi báo cáo thống kê |
-
-### Khóa chính / khóa ngoại
-
-| Bảng | PK | FK |
-|------|----|----|
-| Roles | `Position_id` | — |
-| Major | `Major_ID` | — |
-| Book_Category | `Category_ID` | — |
-| Users | `Users_id` | `Position_id` → Roles |
-| Products | `Product_ID` | `Category_ID` → Book_Category, `Major_ID` → Major |
-| Book_Stock | `Product_ID` | `Product_ID` → Products |
-| Borrow_Transaction | `Order_ID` | `Users_id` → Users, `Product_ID` → Products |
-
-### Quy trình nhập liệu & quản lý
-
-1. **Thêm sách mới**: `INSERT` vào `Products` → sau đó `INSERT` dòng tương ứng vào `Book_Stock` (tồn kho ban đầu).
-2. **Thêm người dùng mới**: `INSERT` vào `Users` — bắt buộc `Position_id` phải tồn tại trong `Roles` (đảm bảo bởi FK).
-3. **Phát sinh mượn sách**: `INSERT` vào `Borrow_Transaction`; đồng thời cần `UPDATE` giảm `Book_Stock.Inventory_Number` và giảm `Users.Remaining_limited`.
-4. **Trả sách**: `UPDATE Borrow_Transaction.End_date`, đồng thời `UPDATE` tăng lại tồn kho.
-5. **Toàn vẹn dữ liệu**: ràng buộc FK ngăn việc mượn sách không tồn tại, hoặc gán người dùng vào vai trò không có thật.
+> ⚠️ **Excel Serial Date:** `Sale_Transaction.Order_Date` và `SerInv_Transaction.In_Date` được lưu dạng **số nguyên** (Excel serial). Dùng công thức sau để convert sang DATE:
+> ```sql
+> CAST(DATEADD(day, CAST(Order_Date AS INT), '1899-12-30') AS DATE)
+> ```
 
 ---
 
-## 📊 Dữ liệu mẫu (tự sinh)
+## 🎯 Business Questions
 
-| Đối tượng | Số lượng |
-|-----------|----------|
-| Ngành học | 5 (CNTT, Kinh Tế, Ngôn Ngữ Anh, Y Dược, Luật) |
-| Thể loại sách | 5 |
-| Đầu sách | 30 (6 sách/ngành) |
-| Người dùng | 40 (SV/GV/Nhân viên) |
-| Giao dịch mượn | 289 (trải từ 01/2025 → 04/2025) |
-
-> Dữ liệu được sinh có chủ đích để đảm bảo tồn tại: một số đầu sách có **>5 người mượn riêng biệt/tháng** (phục vụ câu 4–5), và một số người dùng có **tổng số lần mượn >10** (phục vụ câu 6).
-
----
-
-## 🚀 Cách chạy
-
-1. Mở **SSMS** (SQL Server Management Studio)
-2. Chạy file `Library_Master_TSQL.sql` **từ trên xuống dưới** — file tự tạo database `LibraryManagement`, tự xóa bảng cũ nếu có (cho phép chạy lại nhiều lần)
-3. Mỗi PHẦN trong file tương ứng với 1 câu hỏi — có thể chạy riêng từng phần sau khi đã chạy PHẦN 0–2 (schema + data)
+| # | Câu hỏi | Kỹ thuật SQL | Phần trong file |
+|---|---------|-------------|-----------------|
+| BQ1 | Doanh thu cho thuê theo tháng × danh mục | `CREATE VIEW` + `FORMAT()` + JOIN 3 bảng | PHẦN 2 |
+| BQ2 | Doanh thu bán sách theo tháng × danh mục | Excel serial date conversion | PHẦN 3 |
+| BQ3 | Top 2 danh mục thuê nhiều nhất từng tháng | `ROW_NUMBER() OVER (PARTITION BY)` | PHẦN 4 |
+| BQ4 | Sách có >5 người thuê riêng biệt/tháng | Subquery trong `FROM` | PHẦN 5 |
+| BQ5 | Sách có >5 người thuê riêng biệt/tháng | CTE (`WITH ... AS`) | PHẦN 6 |
+| BQ6 | Sinh viên thuê sách hơn 10 lần | CTE + `JOIN Student` | PHẦN 7 |
+| BQ7 | Tồn kho trung bình theo kệ sách × danh mục | `AVG / MIN / MAX` + JOIN | PHẦN 8 |
 
 ---
 
-## 📈 Kết quả phân tích chính (ví dụ)
+## 🔑 Kỹ thuật SQL sử dụng
 
-- **Top 2 ngành học mượn nhiều nhất mỗi tháng**: thay đổi theo tháng — phản ánh nhu cầu học tập theo môn/kỳ thi
-- **Sách "hot" (>5 người mượn/tháng)**: thường là giáo trình cốt lõi của từng ngành (vd. "Cơ Sở Dữ Liệu" cho CNTT)
-- **Người dùng mượn nhiều (>10 lần)**: nhóm này là đối tượng ưu tiên cho chương trình "thẻ thư viện VIP" hoặc gia hạn mượn dài hơn
+| Kỹ thuật | BQ |
+|----------|-----|
+| `CREATE VIEW` | BQ1 |
+| `FORMAT()` phân nhóm tháng | BQ1, BQ2, BQ4, BQ5 |
+| Excel serial date conversion (`DATEADD`) | BQ2, BQ8 |
+| `ROW_NUMBER() OVER (PARTITION BY)` | BQ3 |
+| Subquery trong `FROM` | BQ4 |
+| CTE — `WITH ... AS (...)` | BQ5, BQ6 |
+| Multi-CTE + `FULL OUTER JOIN` | BQ8 |
+| `COUNT(DISTINCT ...)` | BQ4, BQ5 |
+| `AVG / MIN / MAX` | BQ7 |
+
+---
+
+## 📈 Insight dự kiến
+
+- **Doanh thu:** So sánh Thuê vs Bán cho thấy kênh nào đóng góp nhiều hơn theo từng năm
+- **Sách hot:** Các đầu sách có >5 người thuê/tháng là ứng viên cần bổ sung tồn kho
+- **Kệ sách:** Kệ có `TonKhoBinhQuan` thấp nhất = ưu tiên nhập hàng trước
+- **Sinh viên tích cực:** Nhóm thuê >10 lần là đối tượng cho chương trình thẻ thư viện ưu đãi
+
+
+## 📈 Key Findings (từ dữ liệu thực tế)
+
+> Tính trực tiếp từ 999 giao dịch thuê sách 2017–2026.
+
+- 📚 **Top 3 thể loại thuê nhiều nhất:** Tài liệu nghiên cứu IT Infras (1,899 cuốn), Bộ đề tự luyện IT Data Science (1,559), Sách dạy học IT Data Science (1,539) — nhu cầu học IT chiếm ưu thế rõ rệt
+- 💰 **Tổng doanh thu cho thuê 2017–2026: ~376.8 triệu VND** — trung bình ~37.7 triệu/năm
+- 📊 **Nhu cầu thuê ổn định:** dao động 1,000–1,200 cuốn/năm, không có xu hướng tăng đột biến → cần chiến dịch kích cầu
+- 👥 **Chỉ 91/1,017 sinh viên (9%) có giao dịch thuê sách** — 91% sinh viên chưa sử dụng dịch vụ → tiềm năng mở rộng tệp người dùng rất lớn
+- 🎯 **Đề xuất:** Ưu tiên bổ sung tồn kho các đầu sách IT; chạy chương trình khuyến khích sinh viên năm 1–2 đăng ký thẻ thư viện
 
 ---
 
 ## 👤 Tác giả
 
-**[Tên bạn]** — Business Data Analyst
-📧 your.email@gmail.com
+**Nguyễn Hùng Thanh** — Business Data Analyst
 
----
-
-## 📜 License
-
-MIT License — sử dụng tự do cho mục đích học tập.
+hungthsnhnguyen37@gmail.com
