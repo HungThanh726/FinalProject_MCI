@@ -1,4 +1,5 @@
- LIBRARY ANALYTICS PROJECT — MASTER T-SQL
+/*
+LIBRARY ANALYTICS PROJECT — MASTER T-SQL
   Database : LibraryDB
 ================================================================================
   MỤC LỤC:
