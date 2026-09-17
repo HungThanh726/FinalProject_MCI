@@ -8,10 +8,20 @@ Dự án phân tích hoạt động vận hành **thư viện trường học** 
 
 ```
 library-analytics/
-- README.md
-- Library_Master_TSQL.sql      ← Toàn bộ query — 8 BQ, annotated
-- Library_PowerBI_Guide.md     ← Hướng dẫn dựng dashboard
-- Library_ERD.png              ← Sơ đồ quan hệ bảng (ảnh tĩnh)
+├── README.md
+├── Library_Master_TSQL.sql   
+└── data/
+    ├── Student.csv              (1,017 rows)
+    ├── Teacher.csv              (99 rows)
+    ├── Category.csv             (12 rows)
+    ├── Shelves.csv              (21 rows)
+    ├── Products.csv             (50 rows)
+    ├── Rental_Transaction.csv   (999 rows)
+    ├── Sale_Transaction.csv     (999 rows)
+    ├── SerInv_Transaction_.csv  (999 rows)
+    ├── Classes.csv              (48 rows)
+    ├── RoleId.csv               (5 rows)
+    └── Service.csv              (3 rows)
 ```
 
 ---
@@ -20,8 +30,7 @@ library-analytics/
 
 | Layer | Công cụ |
 |-------|---------|
-| Database Engine | SQL Server 2019+ (T-SQL) |
-| Query IDE | SSMS (SQL Server Management Studio) |
+| Database Engine | SQL Server (T-SQL) |
 | BI / Visualization | Power BI Desktop |
 | Version Control | Git / GitHub |
 
@@ -29,7 +38,73 @@ library-analytics/
 
 ## 🗄️ Schema & Quan hệ bảng
 
-Có hình ảnh ở ngoài
+### Sơ đồ ERD
+
+```mermaid
+erDiagram
+  CATEGORY ||--o{ SHELVES : "chua tren ke"
+  CATEGORY ||--o{ PRODUCTS : "thuoc danh muc"
+  SHELVES ||--o{ PRODUCTS : "dat tren ke"
+  SHELVES ||--o{ SERVINV_TRANSACTION : "ton kho theo ke"
+  PRODUCTS ||--o{ RENTAL_TRANSACTION : "duoc thue"
+  PRODUCTS ||--o{ SALE_TRANSACTION : "duoc ban"
+  PRODUCTS ||--o{ SERVINV_TRANSACTION : "bien dong ton kho"
+  STUDENT ||--o{ RENTAL_TRANSACTION : "thue sach"
+
+  CATEGORY {
+    string Category_ID PK
+    string Category_Name
+    string Purpose
+    string ShortCode_Cate
+  }
+  SHELVES {
+    string Shelves_ID PK
+    string Shelf_Description
+    string Shelf_Location
+    string Category_ID FK
+  }
+  PRODUCTS {
+    string Product_id PK
+    string Product_Name
+    string Category_ID FK
+    int Quantity
+    float Product_UnitCost
+    float Product_UnitPrice
+    float Product_UnitRental
+    string Shelves_ID FK
+  }
+  STUDENT {
+    string User_ID
+    string Full_name
+    string Gender
+    string Library_Card_Number PK
+    date Registration_Date
+    date Expiration_Date
+    string Class
+  }
+  RENTAL_TRANSACTION {
+    string Rent_Number PK
+    date Rent_Date
+    string Product_ID FK
+    string Library_Card_Number FK
+    int Credit_Rent
+    date Return_Date
+    int Order_Quantity
+  }
+  SALE_TRANSACTION {
+    string Order_Number PK
+    int Order_Date
+    string Product_ID FK
+    string Library_Card_Number
+    int Order_Quantity
+  }
+  SERVINV_TRANSACTION {
+    int In_Date
+    string Shelves_ID FK
+    string Product_ID FK
+    int DayEnd_Stock_Pcs
+  }
+```
 
 ### Mô tả từng bảng
 
@@ -65,6 +140,7 @@ Có hình ảnh ở ngoài
 | BQ5 | Sách có >5 người thuê riêng biệt/tháng | CTE (`WITH ... AS`) | PHẦN 6 |
 | BQ6 | Sinh viên thuê sách hơn 10 lần | CTE + `JOIN Student` | PHẦN 7 |
 | BQ7 | Tồn kho trung bình theo kệ sách × danh mục | `AVG / MIN / MAX` + JOIN | PHẦN 8 |
+| BQ8 | So sánh doanh thu Thuê vs Bán theo năm | Multi-CTE + `FULL OUTER JOIN` | PHẦN 9 |
 
 ---
 
@@ -81,6 +157,38 @@ Có hình ảnh ở ngoài
 | Multi-CTE + `FULL OUTER JOIN` | BQ8 |
 | `COUNT(DISTINCT ...)` | BQ4, BQ5 |
 | `AVG / MIN / MAX` | BQ7 |
+| `COALESCE / ISNULL` | BQ8 |
+
+---
+
+## 🚀 Cách chạy
+
+### Yêu cầu
+- SQL Server 2019+ hoặc SQL Server Express (miễn phí)
+- SSMS (SQL Server Management Studio)
+
+### Bước 1 — Tạo Database
+```sql
+CREATE DATABASE LibraryDB;
+```
+
+### Bước 2 — Import CSV vào SQL Server
+Trong SSMS → Right-click `LibraryDB` → **Tasks → Import Flat File**  
+Import lần lượt từng file CSV trong thư mục `data/`.
+
+> Tên table sau khi import phải khớp chính xác:
+> `Student`, `Teacher`, `Category`, `Shelves`, `Products`,
+> `Rental_Transaction`, `Sale_Transaction`, `SerInv_Transaction`,
+> `Classes`, `RoleId`, `Service`
+
+### Bước 3 — Chạy Query
+1. Mở `Library_Master_TSQL.sql` trong SSMS
+2. Đảm bảo đang ở đúng database: `USE LibraryDB`
+3. Chạy **PHẦN 2 trước** (tạo View `v_DoanhThuThueThang`) — BQ3 phụ thuộc view này
+4. Chạy từng PHẦN tiếp theo
+
+### Bước 4 — Kết nối Power BI
+Xem `Library_PowerBI_Guide.md`
 
 ---
 
@@ -106,6 +214,7 @@ Có hình ảnh ở ngoài
 
 ## 👤 Tác giả
 
-**Nguyễn Hùng Thanh** — Business Data Analyst
+**[Tên bạn]** — Business Data Analyst
+
 
 hungthsnhnguyen37@gmail.com
