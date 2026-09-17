@@ -127,7 +127,7 @@ erDiagram
 ## 🎯 Business Questions
 
 | # | Câu hỏi | Kỹ thuật SQL | 
-|---|---------|-------------|-----------------|
+|---|---------|-------------|
 | BQ1 | Doanh thu cho thuê theo tháng × danh mục | `CREATE VIEW` + `FORMAT()` + JOIN 3 bảng | 
 | BQ2 | Doanh thu bán sách theo tháng × danh mục | Excel serial date conversion | 
 | BQ3 | Top 2 danh mục thuê nhiều nhất từng tháng | `ROW_NUMBER() OVER (PARTITION BY)` | 
