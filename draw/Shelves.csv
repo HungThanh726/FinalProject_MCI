@@ -1,0 +1,22 @@
+﻿Shelves_ID,Shelf_Description,Shelf_Location,Category_ID
+Shel01,Kệ sách dậy học Toán,Kệ 1 dẫy 1,Cate08
+Shel02,Kệ sách dậy học Lý,Kệ 1 dẫy 2,Cate09
+Shel03,Kệ sách dậy học Hóa,Kệ 1 dẫy 3,Cate08
+Shel04,Kệ sách dậy học Anh,Kệ 1 dẫy 4,Cate05
+Shel05,Sách kỹ năng mềm,Kệ 2 dẫy 1,Cate07
+Shel06,Sách kỹ năng giao tiếp,Kệ 2 dẫy 2,Cate03
+Shel07,Sách kỹ năng sinh tồn,Kệ 2 dẫy 3,Cate01
+Shel08,Sách kỹ năng sống,Kệ 2 dẫy 4,Cate07
+Shel09,Thiết bị dạy học Hóa,Kệ 3 dẫy 1,Cate10
+Shel010,Thiết bị dạy học Sinh,Kệ 3 dẫy 2,Cate08
+Shel011,Tài liệu nghiên cứu Kinh tế,Kệ 3 dẫy 3,Cate02
+Shel012,Tài liệu nghiên cứu Văn học,Kệ 3 dẫy 4,Cate01
+Shel013,Sách Những thí nghiệm vui,kệ 4 dẫy 1,Cate01
+Shel002,Kệ sách dậy học Toán,Kệ 1 dẫy 1,Cate08
+Shel003,Kệ sách dậy học Lý,Kệ 1 dẫy 2,Cate09
+Shel004,Kệ sách dậy học Hóa,Kệ 1 dẫy 3,Cate08
+Shel005,Kệ sách dậy học Anh,Kệ 1 dẫy 4,Cate05
+Shel006,Sách kỹ năng mềm,Kệ 2 dẫy 1,Cate07
+Shel007,Sách kỹ năng giao tiếp,Kệ 2 dẫy 2,Cate03
+Shel008,Sách kỹ năng sinh tồn,Kệ 2 dẫy 3,Cate01
+Shel009,Sách kỹ năng sinh tồn,Kệ 2 dẫy 3,Cate01

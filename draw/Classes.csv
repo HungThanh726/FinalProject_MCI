@@ -1,0 +1,49 @@
+﻿Num,Class,Level,Class_Code,Session
+1,IT Business Analyst,1,IBAPM1,PM-Early
+1,IT Business Analyst,2,IBAPM2,PM-Early
+1,IT Business Analyst,3,IBAPM3,PM-Late
+2,SQL,1,SQLAM1,AM
+2,SQL,2,SQLPM2,PM-Late
+2,SQL,3,SQLPM3,PM-Late
+3,Python,1,PYBPM1,PM-Early
+3,Python,2,PYBAM2,AM
+3,Python,3,PYBPM3,PM-Early
+4,PL/SQL,1,PSQPM1,PM-Early
+4,PL/SQL,2,PSQAM2,AM
+4,PL/SQL,3,PSQAM3,AM
+5,IT Data Science,1,IDSPM1,PM-Late
+5,IT Data Science,2,IDSAM2,AM
+5,IT Data Science,3,IDSPM3,PM-Late
+6,Data Lake & Data Warehouse,1,DWLPM1,PM-Late
+6,Data Lake & Data Warehouse,2,DWLPM2,PM-Late
+6,Data Lake & Data Warehouse,3,DWLPM3,PM-Early
+7,Power BI,1,PBIPM1,PM-Late
+7,Power BI,2,PBIAM2,AM
+7,Power BI,3,PBIAM3,AM
+8,Python_Crawling,1,PYCAM1,AM
+8,Python_Crawling,2,PYCPM2,PM-Early
+8,Python_Crawling,3,PYCAM3,AM
+9,Visual Basic Application,1,VBAPM1,PM-Late
+9,Visual Basic Application,2,VBAPM2,PM-Early
+9,Visual Basic Application,3,VBAPM3,PM-Early
+10,Excel,1,EXCPM1,PM-Early
+10,Excel,2,EXCAM2,AM
+10,Excel,3,EXCAM3,AM
+11,Maths & Statistics,1,MAPM1,PM-Early
+11,Maths & Statistics,2,MAPM2,PM-Early
+11,Maths & Statistics,3,MAAM3,AM
+12,Business Solution,1,BUSAM1,AM
+12,Business Solution,2,BUSAM2,AM
+12,Business Solution,3,BUSAM3,AM
+13,Supply Chain Solution,1,SCSPM1,PM-Early
+13,Supply Chain Solution,2,SCSAM2,AM
+13,Supply Chain Solution,3,SCSPM3,PM-Early
+14,Marketing Solution,1,MASPM1,PM-Early
+14,Marketing Solution,2,MASPM2,PM-Early
+14,Marketing Solution,3,MASPM3,PM-Late
+15,Business Adminstration,1,BADPM1,PM-Late
+15,Business Adminstration,2,BADPM2,PM-Late
+15,Business Adminstration,3,BADAM3,AM
+16,Supply Chain Management,1,SCMAM1,AM
+16,Supply Chain Management,2,SCMAM2,AM
+16,Supply Chain Management,3,SCMPM3,PM-Late
