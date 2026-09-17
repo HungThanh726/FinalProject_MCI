@@ -126,16 +126,16 @@ erDiagram
 
 ## 🎯 Business Questions
 
-| # | Câu hỏi | Kỹ thuật SQL | Phần trong file |
+| # | Câu hỏi | Kỹ thuật SQL | 
 |---|---------|-------------|-----------------|
-| BQ1 | Doanh thu cho thuê theo tháng × danh mục | `CREATE VIEW` + `FORMAT()` + JOIN 3 bảng | PHẦN 2 |
-| BQ2 | Doanh thu bán sách theo tháng × danh mục | Excel serial date conversion | PHẦN 3 |
-| BQ3 | Top 2 danh mục thuê nhiều nhất từng tháng | `ROW_NUMBER() OVER (PARTITION BY)` | PHẦN 4 |
-| BQ4 | Sách có >5 người thuê riêng biệt/tháng | Subquery trong `FROM` | PHẦN 5 |
-| BQ5 | Sách có >5 người thuê riêng biệt/tháng | CTE (`WITH ... AS`) | PHẦN 6 |
-| BQ6 | Sinh viên thuê sách hơn 10 lần | CTE + `JOIN Student` | PHẦN 7 |
-| BQ7 | Tồn kho trung bình theo kệ sách × danh mục | `AVG / MIN / MAX` + JOIN | PHẦN 8 |
-| BQ8 | So sánh doanh thu Thuê vs Bán theo năm | Multi-CTE + `FULL OUTER JOIN` | PHẦN 9 |
+| BQ1 | Doanh thu cho thuê theo tháng × danh mục | `CREATE VIEW` + `FORMAT()` + JOIN 3 bảng | 
+| BQ2 | Doanh thu bán sách theo tháng × danh mục | Excel serial date conversion | 
+| BQ3 | Top 2 danh mục thuê nhiều nhất từng tháng | `ROW_NUMBER() OVER (PARTITION BY)` | 
+| BQ4 | Sách có >5 người thuê riêng biệt/tháng | Subquery trong `FROM` | 
+| BQ5 | Sách có >5 người thuê riêng biệt/tháng | CTE (`WITH ... AS`) | 
+| BQ6 | Sinh viên thuê sách hơn 10 lần | CTE + `JOIN Student` |
+| BQ7 | Tồn kho trung bình theo kệ sách × danh mục | `AVG / MIN / MAX` + JOIN | 
+| BQ8 | So sánh doanh thu Thuê vs Bán theo năm | Multi-CTE + `FULL OUTER JOIN` |
 
 ---
 
@@ -158,9 +158,7 @@ erDiagram
 
 ## 🚀 Cách chạy
 
-### Yêu cầu
-- SQL Server 2019+ hoặc SQL Server Express (miễn phí)
-- SSMS (SQL Server Management Studio)
+SSMS (SQL Server Management Studio)
 
 ### Bước 1 — Tạo Database
 ```sql
@@ -181,9 +179,6 @@ Import lần lượt từng file CSV trong thư mục `data/`.
 2. Đảm bảo đang ở đúng database: `USE LibraryDB`
 3. Chạy **PHẦN 2 trước** (tạo View `v_DoanhThuThueThang`) — BQ3 phụ thuộc view này
 4. Chạy từng PHẦN tiếp theo
-
-### Bước 4 — Kết nối Power BI
-Xem `Library_PowerBI_Guide.md`
 
 ---
 
@@ -209,7 +204,7 @@ Xem `Library_PowerBI_Guide.md`
 
 ## 👤 Tác giả
 
-**[Tên bạn]** — Business Data Analyst
+**NGUYEN HUNG THANH** — Data Analyst
 
 
 hungthsnhnguyen37@gmail.com
