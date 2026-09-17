@@ -122,11 +122,6 @@ erDiagram
 | `RoleId` | 5 | Cấp độ vai trò người dùng |
 | `Service` | 3 | Loại dịch vụ (Cho thuê, Bán, Lưu trữ) |
 
-> ⚠️ **Excel Serial Date:** `Sale_Transaction.Order_Date` và `SerInv_Transaction.In_Date` được lưu dạng **số nguyên** (Excel serial). Dùng công thức sau để convert sang DATE:
-> ```sql
-> CAST(DATEADD(day, CAST(Order_Date AS INT), '1899-12-30') AS DATE)
-> ```
-
 ---
 
 ## 🎯 Business Questions
